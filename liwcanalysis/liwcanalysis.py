@@ -39,6 +39,7 @@ class liwc:
             if "*" in line:
                 # root
                 liwc_roots[text[:-1]].append(category)
+                liwc_words[text[:-1]].append(category)
             else:
                 # word
                 liwc_words[text].append(category)
