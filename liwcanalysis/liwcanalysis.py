@@ -1,6 +1,7 @@
 from collections import defaultdict  # used to create a dictionary of lists
 import pandas as pd
 import os
+import re
 
 
 class liwc:
@@ -52,6 +53,13 @@ class liwc:
         self.count_dics = []
         # self.results = defaultdict(list)
 
+    # function to tokenize the text, keeping both emoticons and contractions (as they are in LIWC)
+    def tokenize_and_rejoin(text):
+        text = text.lower()
+        pattern = r"\w+(?:'\w+)?|[:;]-?[()D]|[:;]'?-?[\(\)D]|[-:;.=^><]['`\-]?\)|\S"
+        tokens = re.findall(pattern, text)
+        return ' '.join(tokens)
+    
     # recieves list of transcripts in string form
     # can also recieve a single string
     def analyze(self, transcripts_in):
@@ -83,6 +91,11 @@ class liwc:
         else:
             transcripts = transcripts_in
 
+        # tokenization
+        if type(transcripts) is dict:
+            transcripts = {key: tokenize_and_rejoin(value) for key, value in transcripts.items()}
+        # NOTE: done just on dict type!!!
+        
         # reset values
         self.result_dics = []
         self.count_dics = []
